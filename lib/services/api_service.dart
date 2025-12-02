@@ -1,0 +1,29 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class ApiService {
+  final String baseUrl;
+  ApiService({required this.baseUrl});
+
+  Future<Map<String, dynamic>> sendOtp(String mobileNo) async {
+    try {
+      final uri = Uri.parse('$baseUrl/auth/send-otp');
+      final res = await http.post(uri, headers: {'Content-Type': 'application/json'}, body: jsonEncode({'mobile_no': mobileNo}));
+      return jsonDecode(res.body) as Map<String, dynamic>;
+    } catch (e) {
+      throw Exception('Network error: ${e.toString()}');
+    }
+  }
+
+  Future<Map<String, dynamic>> register(Map<String, dynamic> data) async {
+    final uri = Uri.parse('$baseUrl/auth/register');
+    final res = await http.post(uri, headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
+    return jsonDecode(res.body) as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> login(String mobileNo, String password) async {
+    final uri = Uri.parse('$baseUrl/auth/login');
+    final res = await http.post(uri, headers: {'Content-Type': 'application/json'}, body: jsonEncode({'mobile_no': mobileNo, 'password': password}));
+    return jsonDecode(res.body) as Map<String, dynamic>;
+  }
+}
