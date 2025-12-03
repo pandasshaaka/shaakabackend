@@ -19,9 +19,12 @@ def ensure_engine():
             # Force PostgreSQL connection using psycopg3
             connection_string = s.database_url
             if connection_string.startswith('postgresql://'):
-                # Use psycopg3 driver for Python 3.13 compatibility
+                # Convert to psycopg3 driver for Python 3.13 compatibility
+                # Replace postgresql:// with postgresql+psycopg://
+                psycopg3_connection_string = connection_string.replace('postgresql://', 'postgresql+psycopg://', 1)
+                
                 Engine = create_engine(
-                    connection_string,
+                    psycopg3_connection_string,
                     pool_pre_ping=True,
                     pool_recycle=300,
                     echo=False,
