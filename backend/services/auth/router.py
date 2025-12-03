@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from time import time
 import random
 import logging
-from ...common.db import SessionLocal, ensure_engine
-from ...common.models import UserProfile
-from ...common.security import hash_password, verify_password, create_access_token
+from common.db import SessionLocal, ensure_engine
+from common.models import UserProfile
+from common.security import hash_password, verify_password, create_access_token
 
 
 router = APIRouter()

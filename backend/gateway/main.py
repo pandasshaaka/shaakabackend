@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from ..services.auth.router import router as auth_router
-from ..services.user.router import router as user_router
+from services.auth.router import router as auth_router
+from services.user.router import router as user_router
 from fastapi.staticfiles import StaticFiles
-from ..services.files.router import router as files_router
+from services.files.router import router as files_router
 import logging
+import os
 
 
 logging.basicConfig(level=logging.INFO)
@@ -20,4 +21,8 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/auth")
 app.include_router(user_router, prefix="/user")
 app.include_router(files_router, prefix="/files")
-app.mount("/files/static", StaticFiles(directory="backend/uploads"), name="files-static")
+
+# Create uploads directory if it doesn't exist
+uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/files/static", StaticFiles(directory=uploads_dir), name="files-static")

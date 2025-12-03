@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
-from ...common.db import SessionLocal, ensure_engine
-from ...common.models import UserProfile
-from ...common.security import decode_token
+from common.db import SessionLocal, ensure_engine
+from common.models import UserProfile
+from common.security import decode_token
 
 
 router = APIRouter()
