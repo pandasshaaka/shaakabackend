@@ -160,11 +160,11 @@ class _RegisterPageState extends State<RegisterPage> {
         context,
       ).showSnackBar(const SnackBar(content: Text('Registered')));
       Navigator.pushReplacementNamed(context, '/login');
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Registration failed')));
+        ).showSnackBar(SnackBar(content: Text('Registration failed: ${e.toString().replaceAll('Exception: ', '')}')));
       }
     } finally {
       if (mounted) {

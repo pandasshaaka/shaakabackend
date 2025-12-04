@@ -28,9 +28,9 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         Navigator.pushReplacementNamed(context, '/home_customer');
       }
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login failed')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString().replaceAll('Exception: ', '')}')));
       }
     } finally {
       if (mounted) {
