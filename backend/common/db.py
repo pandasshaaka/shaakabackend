@@ -43,6 +43,10 @@ def ensure_engine():
                 Base.metadata.create_all(bind=Engine)
                 logging.info("Database tables ensured")
                 
+                # Run profile photo migration
+                from .migrations import run_profile_photo_migration
+                run_profile_photo_migration(SessionLocal())
+                
             else:
                 raise ValueError("Invalid database URL format - must be postgresql://")
                 
