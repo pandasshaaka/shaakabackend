@@ -156,15 +156,30 @@ class _RegisterPageState extends State<RegisterPage> {
       };
       await _api.register(data);
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Registered')));
-      Navigator.pushReplacementNamed(context, '/login');
+
+      // Show success message with better UX
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration successful! Redirecting to login...'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Add a small delay for better user experience
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Clear navigation stack and go to login
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Registration failed: ${e.toString().replaceAll('Exception: ', '')}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Registration failed: ${e.toString().replaceAll('Exception: ', '')}',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {

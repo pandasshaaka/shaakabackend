@@ -18,19 +18,53 @@ class _LoginPageState extends State<LoginPage> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      final res = await _api.login(_mobileController.text.trim(), _passwordController.text);
+      final res = await _api.login(
+        _mobileController.text.trim(),
+        _passwordController.text,
+      );
       final category = res['category'] as String?;
       if (!mounted) return;
+
+      // Show success message with better UX
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login successful! Welcome back...'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 1),
+        ),
+      );
+
+      // Add a small delay for better user experience
+      await Future.delayed(const Duration(milliseconds: 300));
+
       if (category == 'Vendor') {
-        Navigator.pushReplacementNamed(context, '/home_vendor');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home_vendor',
+          (route) => false,
+        );
       } else if (category == 'Women Merchant') {
-        Navigator.pushReplacementNamed(context, '/home_women');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home_women',
+          (route) => false,
+        );
       } else {
-        Navigator.pushReplacementNamed(context, '/home_customer');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home_customer',
+          (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString().replaceAll('Exception: ', '')}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Login failed: ${e.toString().replaceAll('Exception: ', '')}',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -54,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _mobileController,
                 decoration: const InputDecoration(labelText: 'Mobile Number'),
                 keyboardType: TextInputType.phone,
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -64,9 +99,17 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(onPressed: _loading ? null : _login, child: _loading ? const CircularProgressIndicator() : const Text('Login')),
+              ElevatedButton(
+                onPressed: _loading ? null : _login,
+                child: _loading
+                    ? const CircularProgressIndicator()
+                    : const Text('Login'),
+              ),
               const SizedBox(height: 12),
-              TextButton(onPressed: () => Navigator.pushNamed(context, '/register'), child: const Text('Create account')),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, '/register'),
+                child: const Text('Create account'),
+              ),
             ],
           ),
         ),
